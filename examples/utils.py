@@ -69,7 +69,7 @@ def generate_sql(
     with pipes() as (out, err):
         res = llama(prompt, temperature=0.1, max_tokens=max_tokens)
     sql_query = res["choices"][0]["text"]
-    
+
     is_valid, error_msg = validate_sql(sql_query, schema)
 
     if is_valid:
@@ -78,7 +78,7 @@ def generate_sql(
         print("!!!Invalid SQL detected!!!")
         print(sql_query)
         print(error_msg)
-    
+
     return sql_query
 
 
@@ -88,7 +88,7 @@ def validate_sql(query, schema):
         process = subprocess.Popen(
             [sys.executable, './validate_sql.py', query, schema],
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
+            stderr=subprocess.PIPE,
         )
         # Get output and potential parser, and binder error message
         stdout, stderr = process.communicate(timeout=0.5)
