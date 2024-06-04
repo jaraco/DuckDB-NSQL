@@ -1,9 +1,12 @@
-import sys
+import pathlib
 import re
-from typing import Any
+import sys
 import subprocess
+from typing import Any
+
 from wurlitzer import pipes
 from duckdb import DuckDBPyConnection
+
 
 PROMPT_TEMPLATE = """### Instruction:\n{instruction}\n\n### Input:\n{input}\n### Question:\n{question}\n\n### Response (use duckdb shorthand if possible):\n"""
 INSTRUCTION_TEMPLATE = """Your task is to generate valid duckdb SQL to answer the following question{has_schema}"""  # noqa: E501
@@ -85,8 +88,9 @@ def generate_sql(
 def validate_sql(query, schema):
     try:
         # Define subprocess
+        root = pathlib.Path(__file__).parent
         process = subprocess.Popen(
-            [sys.executable, './validate_sql.py', query, schema],
+            [sys.executable, root / 'validate_sql.py', query, schema],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
